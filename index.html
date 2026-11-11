@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MobileDiffuser — Stable Diffusion 3 Medium on the iPhone Neural Engine</title>
+<meta name="description" content="Open-source iOS app running distilled Stable Diffusion 3 Medium fully on device with Core ML on the Apple Neural Engine: 512px in 9.4 s, 1024px in 31 s on iPhone 15 Pro, with ReSeed seed diversity at no extra cost.">
+<meta property="og:title" content="MobileDiffuser — SD3 Medium on the iPhone Neural Engine">
+<meta property="og:description" content="1024px in 31 s, 512px in 9.4 s, ~146 MB peak app memory. Fully on device, open source.">
+<meta property="og:image" content="https://twwinde.github.io/mobilediffuser-project-page/assets/og.jpg">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0b0b10">
+<link rel="icon" type="image/png" href="assets/icon-180.png">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav" id="nav">
+  <a class="brand" href="#top" aria-label="MobileDiffuser home">
+    <img src="assets/icon.webp" alt="" width="28" height="28">
+    <span>MobileDiffuser</span>
+  </a>
+  <nav class="nav__links" aria-label="Sections">
+    <a href="#pipeline">Pipeline</a>
+    <a href="#hires">1024</a>
+    <a href="#reseed">ReSeed</a>
+    <a href="#performance">Performance</a>
+    <a href="#findings">Findings</a>
+    <a href="#start">Get started</a>
+  </nav>
+  <a class="btn btn--ghost btn--sm" href="https://github.com/TWWinde/MobileDiffuser/tree/MCL" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.4-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg>
+    GitHub
+  </a>
+</header>
+
+<main id="main">
+
+<!-- ───────────── Hero ───────────── -->
+<section class="hero" id="top">
+  <div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+  <div class="wrap hero__grid">
+    <div class="hero__copy">
+      <p class="eyebrow"><span class="dot"></span>Open source · iOS · Core ML · Apple Neural Engine</p>
+      <h1>Stable Diffusion 3 Medium, <em>entirely on your iPhone.</em></h1>
+      <p class="lede">MobileDiffuser runs a distilled 2-billion-parameter SD3 Medium on the Neural Engine — no server, no GPU fallback. <strong>512&nbsp;px in 9.4&nbsp;s</strong> and <strong>1024&nbsp;px in 31&nbsp;s</strong> on an iPhone&nbsp;15&nbsp;Pro, in about 150&nbsp;MB of app memory.</p>
+      <div class="cta">
+        <a class="btn btn--primary" href="https://github.com/TWWinde/MobileDiffuser/tree/MCL" target="_blank" rel="noopener">View the code</a>
+        <a class="btn btn--ghost" href="https://huggingface.co/Wenwu2000/MobileDiffuser-SD3-medium" target="_blank" rel="noopener">🤗 Core ML models</a>
+        <a class="btn btn--ghost" href="https://www.youtube.com/shorts/m5wlOkeY5Bw" target="_blank" rel="noopener">▶ Demo</a>
+      </div>
+      <p class="authors">Wenwu Tang · Dong Wang · Olga Saukh</p>
+    </div>
+
+    <div class="hero__visual" aria-hidden="true">
+      <figure class="float-card">
+        <img src="assets/fox-1024.webp" alt="" width="1024" height="1024">
+        <figcaption><span class="mono">1024 × 1024</span><span>4 steps · on device</span></figcaption>
+      </figure>
+      <div class="phone">
+        <div class="phone__island"></div>
+        <img src="assets/app-4step.webp" alt="" width="590" height="1280">
+      </div>
+      <div class="chip chip--a"><b class="mono">100%</b> ops on ANE</div>
+      <div class="chip chip--b"><b class="mono">9.4 s</b> · 512 px</div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────── Stats ───────────── -->
+<section class="stats" aria-label="Key numbers">
+  <div class="wrap stats__grid">
+    <div class="stat reveal"><div class="stat__n"><span data-count="9.4" data-dec="1">9.4</span><small>s</small></div><p>512 px · 4 steps<br>warm, iPhone 15 Pro</p></div>
+    <div class="stat reveal"><div class="stat__n"><span data-count="31" data-dec="0">31</span><small>s</small></div><p>1024 px · 4 steps<br>tiled VAE included</p></div>
+    <div class="stat reveal"><div class="stat__n"><span data-count="146" data-dec="0">146</span><small>MB</small></div><p>peak app memory<br>at 1024 px</p></div>
+    <div class="stat reveal"><div class="stat__n"><span data-count="72" data-dec="0">72</span><small>k</small></div><p>ReSeed parameters<br>for diverse seeds, zero cost</p></div>
+  </div>
+</section>
+
+<!-- ───────────── Pipeline ───────────── -->
+<section class="section" id="pipeline">
+  <div class="wrap">
+    <p class="kicker">How it works</p>
+    <h2>A 2B-parameter transformer, <em>fed to the Neural Engine one block at a time.</em></h2>
+    <p class="section__lede">The ANE compiles static graphs and refuses ones that are too large. MobileDiffuser splits the MMDiT into small Core ML stages, quantizes the weights to INT8, and streams them through the Neural Engine — each stage is loaded, run and released, so the app never holds the whole model.</p>
+
+    <div class="pipe reveal" role="img" aria-label="Pipeline: prompt, CLIP text encoders, conditioning, 25 MMDiT stages repeated for 4 steps, tiled VAE decoder, image">
+      <div class="pipe__node"><span class="pipe__tag">input</span><b>Prompt</b><small>77 tokens × 2</small></div>
+      <div class="pipe__arrow"></div>
+      <div class="pipe__node"><span class="pipe__tag">ANE</span><b>CLIP-L + CLIP-G</b><small>6-bit palettized</small></div>
+      <div class="pipe__arrow"></div>
+      <div class="pipe__node pipe__node--wide">
+        <span class="pipe__tag pipe__tag--hot">ANE · × 4 steps</span>
+        <b>Split MMDiT</b>
+        <div class="blocks" id="blocks"></div>
+        <small>Stage 0 embeddings + 24 single-block stages · INT8 · query-chunked attention</small>
+      </div>
+      <div class="pipe__arrow"></div>
+      <div class="pipe__node"><span class="pipe__tag">ANE</span><b>VAE decoder</b><small>3 × 3 feathered tiles at 1024</small></div>
+      <div class="pipe__arrow"></div>
+      <div class="pipe__node pipe__node--img"><img src="assets/fox-512.webp" alt="" width="512" height="512" loading="lazy"></div>
+    </div>
+
+    <div class="cards three">
+      <article class="card reveal">
+        <div class="card__icon">◧</div>
+        <h3>Distilled, no CFG</h3>
+        <p>2-step and 4-step DMD students of SD3 Medium with a flow-matching schedule (shift 3). Guidance is baked in, so every step is a single forward pass.</p>
+      </article>
+      <article class="card reveal">
+        <div class="card__icon">▤</div>
+        <h3>Split &amp; streamed</h3>
+        <p>Conditioning, embeddings and transformer blocks are separate compiled models. Compiled plans are cached by the system, so reloading a stage costs ~25 ms.</p>
+      </article>
+      <article class="card reveal">
+        <div class="card__icon">◎</div>
+        <h3>ANE-first, verified on device</h3>
+        <p><code>.cpuAndNeuralEngine</code> only. A silent CPU fallback is treated as a failure — placement is checked per-op on the phone with <code>MLComputePlan</code>.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────── 1024 ───────────── -->
+<section class="section section--alt" id="hires">
+  <div class="wrap">
+    <p class="kicker">Getting to 1024 × 1024</p>
+    <h2>One transformer block ran out of memory. <em>The weights were only 85&nbsp;MB.</em></h2>
+    <div class="split">
+      <div class="split__text">
+        <p class="section__lede">Converting the 512 recipe at a 128 × 128 latent got the app killed on a <em>single</em> block. A small on-device probe showed why: with the stock attention op and 4,250 tokens, the ANE compiler gives up, Core ML quietly moves every op to the CPU, and the plan balloons to ~4&nbsp;GB.</p>
+        <ol class="fixes">
+          <li class="reveal"><span class="mono">01</span><div><h3>Exact attention in query chunks</h3><p>Queries are split into 16 chunks; each computes softmax(QKᵀ)V against all keys. No approximation — and the block drops to <b>190 ms, 100% ANE, 64 MB</b>.</p></div></li>
+          <li class="reveal"><span class="mono">02</span><div><h3>One block per Core ML stage</h3><p>Four blocks per stage stalled the on-device compiler for 20+ minutes. One block compiles in ~3 s; the full model is 25 stages, compiled once and cached.</p></div></li>
+          <li class="reveal"><span class="mono">03</span><div><h3>Tiled VAE with feathered overlap</h3><p>The 512 decoder handles the 128 × 128 latent as 3 × 3 overlapping tiles blended with linear ramps. No seams, no new VAE.</p></div></li>
+        </ol>
+      </div>
+      <figure class="split__media reveal">
+        <img src="assets/fox-1024.webp" alt="1024 by 1024 image of a red fox in a snowy forest generated with the app's Core ML resources" width="1024" height="1024" loading="lazy">
+        <figcaption>“A photo of a red fox in a snowy forest, highly detailed” — SD3 Medium, 4 steps, 1024 × 1024, Core ML on the Neural Engine.</figcaption>
+      </figure>
+    </div>
+
+    <div class="probe reveal">
+      <div class="probe__head"><h3>One 1024 px block on iPhone 15 Pro</h3><span class="mono">ANEProbe · iOS 18.5</span></div>
+      <div class="bars">
+        <div class="bar bar--bad"><span>Stock SDPA</span><div class="bar__track"><i style="--w:100%"></i></div><b class="mono">CPU fallback → 4 GB → killed</b></div>
+        <div class="bar"><span>Query chunks × 8</span><div class="bar__track"><i style="--w:54%"></i></div><b class="mono">217 ms</b></div>
+        <div class="bar bar--good"><span>Query chunks × 16</span><div class="bar__track"><i style="--w:47%"></i></div><b class="mono">190 ms</b></div>
+        <div class="bar bar--dim"><span>Block without attention</span><div class="bar__track"><i style="--w:7%"></i></div><b class="mono">27 ms</b></div>
+      </div>
+      <p class="probe__note">Attention is ~86% of a 1024 block. A Mac reported the stock-SDPA model as fully ANE-placed — placement does not transfer between devices.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────── ReSeed ───────────── -->
+<section class="section" id="reseed">
+  <div class="wrap">
+    <p class="kicker">ReSeed, on device</p>
+    <h2>Few-step models forget how to be different. <em>A 72k-parameter bias reminds them.</em></h2>
+    <p class="section__lede">Distilled students map different noise seeds to nearly the same image. <a href="https://twwinde.github.io/reseed-project-page/" target="_blank" rel="noopener">ReSeed</a> adds a learned per-channel bias to every transformer block output during the <em>first</em> sampler step only. Because each block is already its own Core ML stage, the bias is added between stages in Swift — same weights, no reload, no measurable cost.</p>
+
+    <div class="reseed reveal">
+      <div class="reseed__bar">
+        <div class="seg" role="tablist" aria-label="ReSeed strength">
+          <button role="tab" aria-selected="true" data-alpha="0">ReSeed off</button>
+          <button role="tab" aria-selected="false" data-alpha="10">α 1.0</button>
+          <button role="tab" aria-selected="false" data-alpha="15">α 1.5</button>
+        </div>
+        <p class="reseed__prompt">“A portrait photo of a young woman in a park, natural light” · seeds 1–4 · 512 px</p>
+      </div>
+      <div class="reseed__grid" id="reseedGrid">
+        <figure><img src="assets/reseed/a0_s1.webp" alt="Seed 1" width="512" height="512" loading="lazy"><figcaption class="mono">seed 1</figcaption></figure>
+        <figure><img src="assets/reseed/a0_s2.webp" alt="Seed 2" width="512" height="512" loading="lazy"><figcaption class="mono">seed 2</figcaption></figure>
+        <figure><img src="assets/reseed/a0_s3.webp" alt="Seed 3" width="512" height="512" loading="lazy"><figcaption class="mono">seed 3</figcaption></figure>
+        <figure><img src="assets/reseed/a0_s4.webp" alt="Seed 4" width="512" height="512" loading="lazy"><figcaption class="mono">seed 4</figcaption></figure>
+      </div>
+      <p class="reseed__caption" id="reseedCaption">Without ReSeed, four seeds give almost the same frontal portrait.</p>
+    </div>
+
+    <div class="cards three">
+      <article class="card reveal"><div class="card__icon">＋</div><h3>Between-stage bias</h3><p>Biases for blocks 0–22 are added to stage outputs at step 1; the last block’s bias is a small extra input of the final stage. Steps 2–4 are the unchanged student.</p></article>
+      <article class="card reveal"><div class="card__icon">≡</div><h3>One set of weights</h3><p>α = 0 is the plain 4-step model; α = 0.5 / 1.0 / 1.5 scale the adapter. Switching never reloads the pipeline.</p></article>
+      <article class="card reveal"><div class="card__icon">✓</div><h3>Checked against PyTorch</h3><p>The Core ML chain reproduces the ReSeed effect — a 39% change of the first-step output — within the usual fp16 / INT8 error. 512 px stays at 9.4 s.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────── Performance ───────────── -->
+<section class="section section--alt" id="performance">
+  <div class="wrap">
+    <p class="kicker">Performance</p>
+    <h2>Measured on an iPhone 15 Pro, <em>warm, end to end.</em></h2>
+    <div class="perf reveal">
+      <div class="perf__row">
+        <div class="perf__label"><b>512 × 512</b><span>4 steps</span></div>
+        <div class="stack" style="--total:9.4">
+          <i class="s-text" style="--v:0.7" title="Text encoders 0.7 s"></i><i class="s-mmdit" style="--v:8.2" title="MMDiT 8.2 s"></i><i class="s-vae" style="--v:0.4" title="VAE 0.4 s"></i>
+        </div>
+        <div class="perf__total mono">9.4 s</div>
+      </div>
+      <div class="perf__row">
+        <div class="perf__label"><b>1024 × 1024</b><span>4 steps</span></div>
+        <div class="stack" style="--total:31.4">
+          <i class="s-text" style="--v:0.7" title="Text encoders 0.7 s"></i><i class="s-mmdit" style="--v:25.2" title="MMDiT 25.2 s"></i><i class="s-vae" style="--v:5.4" title="VAE 5.4 s"></i>
+        </div>
+        <div class="perf__total mono">31 s</div>
+      </div>
+      <div class="legend"><span><i class="s-text"></i>Text encoders</span><span><i class="s-mmdit"></i>MMDiT (4 steps)</span><span><i class="s-vae"></i>VAE decode</span></div>
+    </div>
+
+    <div class="table-wrap reveal">
+      <table>
+        <thead><tr><th>Model</th><th>Resolution</th><th>Text</th><th>MMDiT</th><th>VAE</th><th>Total</th><th>Peak app memory</th></tr></thead>
+        <tbody>
+          <tr><td>SD3-M 2-step</td><td>512</td><td>—</td><td>—</td><td>—</td><td class="mono">~5.6 s</td><td class="mono">~86 MB</td></tr>
+          <tr><td>SD3-M 4-step <span class="pill">+ ReSeed</span></td><td>512</td><td class="mono">0.7 s</td><td class="mono">8.2 s</td><td class="mono">0.4 s</td><td class="mono">~9.4 s</td><td class="mono">~58 MB</td></tr>
+          <tr><td>SD3-M 4-step</td><td>1024</td><td class="mono">0.7 s</td><td class="mono">25.2 s</td><td class="mono">5.4 s</td><td class="mono">~31 s</td><td class="mono">~146 MB</td></tr>
+        </tbody>
+      </table>
+      <p class="table-note">iOS 18.5, ANE-first. The first run after install also compiles the stages on device (about 45 s at 1024, once; cached afterwards).</p>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────── Findings ───────────── -->
+<section class="section" id="findings">
+  <div class="wrap">
+    <p class="kicker">Negative results, kept</p>
+    <h2>What did <em>not</em> make it faster.</h2>
+    <p class="section__lede">Everything below was measured on the phone. Rewriting the same attention maths does not help; removing computation without retraining breaks a 4-step student.</p>
+    <div class="findings">
+      <ul class="nolist reveal">
+        <li><b>W8A8 activations</b><span class="mono">199 ms vs 207 ms</span></li>
+        <li><b>ANE-native <code>(B,C,1,S)</code> conv layout</b><span class="mono">249 ms · slower</span></li>
+        <li><b>Per-head split einsum</b><span class="mono">192 ms · same</span></li>
+        <li><b>Chunks aligned to image/text boundary</b><span class="mono">194 ms · same</span></li>
+        <li><b>All 25 stages resident</b><span class="mono">killed after 24 loads</span></li>
+        <li><b>2 × 2 KV pooling, all blocks</b><span class="mono">2.9× faster · LPIPS 0.82</span></li>
+      </ul>
+      <figure class="reveal">
+        <img src="assets/kv-pooling.webp" alt="Grid comparing exact attention with key-value pooled attention variants; pooled variants look foggy or blocky" width="1600" height="1200" loading="lazy">
+        <figcaption>Training-free KV downsampling on the 4-step model. Columns: exact · 2×2 all · 4×4 all · 2×2 first 12 · 2×2 last 12 · with mass correction (3). Fast on the ANE, but the image falls apart — cheaper attention has to be trained in.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────── Gallery + demo ───────────── -->
+<section class="section section--alt" id="gallery">
+  <div class="wrap">
+    <p class="kicker">Samples</p>
+    <h2>Generated on device.</h2>
+    <div class="gallery">
+      <figure class="reveal gallery__main"><img src="assets/showcase.webp" alt="Collage of images generated locally by the 4-step SD3 Medium model" width="1272" height="1394" loading="lazy"></figure>
+      <div class="gallery__side">
+        <a class="video reveal" href="https://www.youtube.com/shorts/m5wlOkeY5Bw" target="_blank" rel="noopener" aria-label="Watch the demo video on YouTube">
+          <img src="https://img.youtube.com/vi/m5wlOkeY5Bw/maxresdefault.jpg" alt="" loading="lazy">
+          <span class="video__play">▶</span>
+          <span class="video__label">Watch the demo</span>
+        </a>
+        <figure class="reveal shot"><img src="assets/app-settings.webp" alt="Settings panel downloading Core ML resources inside the app" width="590" height="1280" loading="lazy"><figcaption>Models download inside the app from Hugging Face — no Python, no CLI.</figcaption></figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────── Get started ───────────── -->
+<section class="section" id="start">
+  <div class="wrap">
+    <p class="kicker">Get started</p>
+    <h2>Build it, download the models in-app, <em>generate.</em></h2>
+    <div class="start">
+      <div class="code reveal">
+        <div class="code__bar"><span></span><span></span><span></span><button class="copy" data-copy="#cloneCmd">Copy</button></div>
+<pre id="cloneCmd"><code>git clone -b MCL https://github.com/TWWinde/MobileDiffuser.git
+cd MobileDiffuser
+open MobileDiffuser.xcodeproj
+<span class="c"># set your signing team, run on a physical iPhone,</span>
+<span class="c"># then Settings → download a model</span></code></pre>
+      </div>
+      <ul class="req reveal">
+        <li><b>Device</b><span>iPhone 15 Pro or newer recommended</span></li>
+        <li><b>OS / tools</b><span>iOS 18.2+, Xcode 16.2+</span></li>
+        <li><b>Models</b><span>~2.9 GB per resource folder, downloaded in-app</span></li>
+        <li><b>Reproduce</b><span>Conversion, probe and validation tools in <code>tools/</code>; notes in <code>docs/ANE_1024.md</code>, <code>docs/RESEED.md</code></span></li>
+      </ul>
+    </div>
+
+    <div class="links">
+      <a class="link reveal" href="https://github.com/TWWinde/MobileDiffuser/tree/MCL" target="_blank" rel="noopener"><span>Code</span><b>github.com/TWWinde/MobileDiffuser</b><i>↗</i></a>
+      <a class="link reveal" href="https://huggingface.co/Wenwu2000/MobileDiffuser-SD3-medium" target="_blank" rel="noopener"><span>Core ML resources</span><b>Wenwu2000/MobileDiffuser-SD3-medium</b><i>↗</i></a>
+      <a class="link reveal" href="https://twwinde.github.io/posts/2026/11/mobilediffuser/" target="_blank" rel="noopener"><span>Write-up</span><b>How 1024 px got onto the Neural Engine</b><i>↗</i></a>
+      <a class="link reveal" href="https://twwinde.github.io/reseed-project-page/" target="_blank" rel="noopener"><span>Related</span><b>ReSeed project page</b><i>↗</i></a>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────── Cite ───────────── -->
+<section class="section section--alt" id="cite">
+  <div class="wrap narrow">
+    <p class="kicker">Cite</p>
+    <h2>If MobileDiffuser is useful in your work</h2>
+    <div class="code reveal">
+      <div class="code__bar"><span></span><span></span><span></span><button class="copy" data-copy="#bib">Copy</button></div>
+<pre id="bib"><code>@misc{tang2025mobilediffuser,
+  author       = {Wenwu Tang and Dong Wang and Olga Saukh},
+  title        = {MobileDiffuser: On-device Stable Diffusion 3 Medium on iPhone with Core ML},
+  year         = {2025},
+  publisher    = {GitHub},
+  howpublished = {\url{https://github.com/TWWinde/MobileDiffuser}}
+}</code></pre>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer__grid">
+    <div class="brand"><img src="assets/icon.webp" alt="" width="24" height="24"><span>MobileDiffuser</span></div>
+    <p>Code under the MIT License. Model weights keep their upstream licenses (Stable Diffusion 3 Medium: Stability AI Community License). Built on Apple’s <a href="https://github.com/apple/ml-stable-diffusion" target="_blank" rel="noopener">ml-stable-diffusion</a>.</p>
+    <p class="footer__meta">Numbers measured on iPhone 15 Pro, iOS 18.5.</p>
+  </div>
+</footer>
+
+<script src="app.js" defer></script>
+</body>
+</html>
