@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MobileDiffuser — Diffusion Models on the iPhone Neural Engine</title>
-<meta name="description" content="Open-source iOS app running large diffusion models fully on device with Core ML on the Apple Neural Engine. Distilled SD3 Medium: 512px in 9.4 s, 1024px in 31 s on iPhone 15 Pro, with ReSeed seed diversity at no extra cost.">
+<meta name="description" content="Open-source iOS app running FLUX.2 Klein and distilled SD3 Medium fully on device with Core ML on the Apple Neural Engine. FLUX.2 Klein 1024px in 77 s; SD3 Medium: 512px in 9.4 s, 1024px in 31 s on iPhone 15 Pro, with ReSeed seed diversity at no extra cost.">
 <meta property="og:title" content="MobileDiffuser — Diffusion Models on the iPhone Neural Engine">
 <meta property="og:description" content="1024px in 31 s, 512px in 9.4 s, ~146 MB peak app memory. Fully on device, free and open source, no sign-up.">
 <meta property="og:image" content="https://twwinde.github.io/mobilediffuser-project-page/assets/og.jpg">
@@ -29,6 +29,7 @@
   <nav class="nav__links" aria-label="Sections">
     <a href="#pipeline">Pipeline</a>
     <a href="#hires">1024</a>
+    <a href="#klein">FLUX.2 Klein</a>
     <a href="#reseed">ReSeed</a>
     <a href="#performance">Performance</a>
     <a href="#findings">Findings</a>
@@ -49,7 +50,7 @@
     <div class="hero__copy">
       <p class="eyebrow"><span class="dot"></span>Free · No sign-up · Open source · iOS · Core ML · Apple Neural Engine</p>
       <h1>Large diffusion models, <em>entirely on your iPhone.</em></h1>
-      <p class="lede">MobileDiffuser runs a distilled 2-billion-parameter SD3 Medium on the Neural Engine — no server, no GPU fallback. <strong>512&nbsp;px in 9.4&nbsp;s</strong> and <strong>1024&nbsp;px in 31&nbsp;s</strong> on an iPhone&nbsp;15&nbsp;Pro, in about 150&nbsp;MB of app memory.</p>
+      <p class="lede">MobileDiffuser runs <strong>FLUX.2 Klein</strong> and a distilled <strong>SD3 Medium</strong> on the Neural Engine — text encoder, denoiser and VAE, no server, no GPU fallback. On an iPhone&nbsp;15&nbsp;Pro: SD3 Medium at 512&nbsp;px in <strong>9.4&nbsp;s</strong> and 1024&nbsp;px in <strong>31&nbsp;s</strong>, FLUX.2 Klein at 1024&nbsp;px in <strong>77&nbsp;s</strong>, in under 200&nbsp;MB of app memory.</p>
       <div class="cta">
         <a class="btn btn--primary" href="https://github.com/TWWinde/MobileDiffuser/tree/MCL" target="_blank" rel="noopener">View the code</a>
         <a class="btn btn--ghost" href="https://huggingface.co/Wenwu2000/MobileDiffuser-SD3-medium" target="_blank" rel="noopener">🤗 Core ML models</a>
@@ -77,10 +78,10 @@
 <!-- ───────────── Stats ───────────── -->
 <section class="stats" aria-label="Key numbers">
   <div class="wrap stats__grid">
-    <div class="stat reveal"><div class="stat__n"><span data-count="9.4" data-dec="1">9.4</span><small>s</small></div><p>512 px · 4 steps<br>warm, iPhone 15 Pro</p></div>
-    <div class="stat reveal"><div class="stat__n"><span data-count="31" data-dec="0">31</span><small>s</small></div><p>1024 px · 4 steps<br>tiled VAE included</p></div>
-    <div class="stat reveal"><div class="stat__n"><span data-count="146" data-dec="0">146</span><small>MB</small></div><p>peak app memory<br>at 1024 px</p></div>
-    <div class="stat reveal"><div class="stat__n"><span data-count="72" data-dec="0">72</span><small>k</small></div><p>ReSeed parameters<br>for diverse seeds, zero cost</p></div>
+    <div class="stat reveal"><div class="stat__n"><span data-count="9.4" data-dec="1">9.4</span><small>s</small></div><p>SD3 Medium · 512 px<br>4 steps, warm, iPhone 15 Pro</p></div>
+    <div class="stat reveal"><div class="stat__n"><span data-count="31" data-dec="0">31</span><small>s</small></div><p>SD3 Medium · 1024 px<br>4 steps, tiled VAE included</p></div>
+    <div class="stat reveal"><div class="stat__n"><span data-count="77" data-dec="0">77</span><small>s</small></div><p>FLUX.2 Klein · 1024 px<br>4 steps, Qwen3 text encoder included</p></div>
+    <div class="stat reveal"><div class="stat__n"><span data-count="185" data-dec="0">185</span><small>MB</small></div><p>app memory with FLUX.2 Klein<br>146 MB for SD3 Medium at 1024</p></div>
   </div>
 </section>
 
@@ -105,7 +106,7 @@
       <div class="pipe__arrow"></div>
       <div class="pipe__node"><span class="pipe__tag">ANE</span><b>VAE decoder</b><small>3 × 3 feathered tiles at 1024</small></div>
       <div class="pipe__arrow"></div>
-      <div class="pipe__node pipe__node--img"><img src="assets/fox-512.webp" alt="" width="512" height="512" loading="lazy"></div>
+      <div class="pipe__node pipe__node--img"><img src="assets/klein-bike-512.webp" alt="" width="512" height="512" loading="lazy"></div>
     </div>
 
     <div class="cards three">
@@ -143,8 +144,8 @@
         </ol>
       </div>
       <figure class="split__media reveal">
-        <img src="assets/fox-1024.webp" alt="1024 by 1024 image of a red fox in a snowy forest generated with the app's Core ML resources" width="1024" height="1024" loading="lazy">
-        <figcaption>“A photo of a red fox in a snowy forest, highly detailed” — SD3 Medium, 4 steps, 1024 × 1024, Core ML on the Neural Engine.</figcaption>
+        <img src="assets/klein-street-iphone.webp" alt="1024 by 1024 image of a rain-soaked neon city street with a figure in a glowing transparent raincoat" width="1024" height="1024" loading="lazy">
+        <figcaption>The same three techniques carry over to FLUX.2 Klein. This 1024 × 1024 image was denoised on the iPhone 15 Pro’s Neural Engine (4 steps); the latent was decoded on a Mac.</figcaption>
       </figure>
     </div>
 
@@ -157,6 +158,38 @@
         <div class="bar bar--dim"><span>Block without attention</span><div class="bar__track"><i style="--w:7%"></i></div><b class="mono">27 ms</b></div>
       </div>
       <p class="probe__note">Attention is ~86% of a 1024 block. A Mac reported the stock-SDPA model as fully ANE-placed — placement does not transfer between devices.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────── FLUX.2 Klein ───────────── -->
+<section class="section" id="klein">
+  <div class="wrap">
+    <p class="kicker">FLUX.2 Klein, on device</p>
+    <h2>A 4B image model and its 4B language model. <em>All of it on the Neural Engine.</em></h2>
+    <div class="split">
+      <div class="split__text">
+        <p class="section__lede">FLUX.2 Klein reads prompts with Qwen3-4B, a language model as large as the denoiser itself. In MobileDiffuser the text encoder, the transformer and the VAE are 37 Core ML stages that run on the ANE one at a time — the app stays under 200&nbsp;MB.</p>
+        <ol class="fixes">
+          <li class="reveal"><span class="mono">01</span><div><h3>Qwen3, cut to what Klein uses</h3><p>The prompt embedding is the hidden states after layers 9, 18 and 27, so only 27 of 36 layers are converted — nine INT8 stages at <b>23 ms each</b>, 256 tokens instead of 512.</p></div></li>
+          <li class="reveal"><span class="mono">02</span><div><h3>A language model in half precision</h3><p>One token carries a 16,000-magnitude activation whose square overflows fp16. The norm divides by the largest value first, and the MLP is rescaled around its last layer; without that the ANE returns <code>inf</code>.</p></div></li>
+          <li class="reveal"><span class="mono">03</span><div><h3>One block per stage, again</h3><p>5 double-stream and 20 single-stream blocks (dim 3072) with exact query-chunked attention, then a tiled FLUX.2 VAE. Every op is placed on the ANE.</p></div></li>
+        </ol>
+      </div>
+      <figure class="split__media reveal">
+        <img src="assets/klein-vs-torch.webp" alt="Three prompts, a fox, a neon OPEN 24 HOURS sign and a bowl of ramen, generated by PyTorch in the top row and by the Core ML stages in the bottom row; the pairs are nearly identical" width="1536" height="1024" loading="lazy">
+        <figcaption>Top: PyTorch reference. Bottom: the INT8 Core ML stages on the Neural Engine, same noise. LPIPS 0.10 / 0.20 / 0.13 — the neon lettering survives quantization.</figcaption>
+      </figure>
+    </div>
+
+    <div class="probe reveal">
+      <div class="probe__head"><h3>FLUX.2 Klein · 1024 px · 4 steps in the app</h3><span class="mono">iPhone 15 Pro · iOS 18.5 · warm</span></div>
+      <div class="bars">
+        <div class="bar"><span>Text encoder (Qwen3)</span><div class="bar__track"><i style="--w:3%"></i></div><b class="mono">2.3 s</b></div>
+        <div class="bar bar--good"><span>Denoiser, 4 steps</span><div class="bar__track"><i style="--w:91%"></i></div><b class="mono">69.9 s</b></div>
+        <div class="bar"><span>VAE, 3 × 3 tiles</span><div class="bar__track"><i style="--w:6%"></i></div><b class="mono">4.7 s</b></div>
+      </div>
+      <p class="probe__note">About 77 s per image and ~185 MB of app memory. The first run also compiles the 37 stages on the phone (about 3 minutes, once). A 512 px variant is converted and verified on a Mac; it has not been timed on the phone yet.</p>
     </div>
   </div>
 </section>
@@ -201,32 +234,40 @@
     <h2>Measured on an iPhone 15 Pro, <em>warm, end to end.</em></h2>
     <div class="perf reveal">
       <div class="perf__row">
-        <div class="perf__label"><b>512 × 512</b><span>4 steps</span></div>
+        <div class="perf__label"><b>512 × 512</b><span>SD3 Medium · 4 steps</span></div>
         <div class="stack" style="--total:9.4">
           <i class="s-text" style="--v:0.7" title="Text encoders 0.7 s"></i><i class="s-mmdit" style="--v:8.2" title="MMDiT 8.2 s"></i><i class="s-vae" style="--v:0.4" title="VAE 0.4 s"></i>
         </div>
         <div class="perf__total mono">9.4 s</div>
       </div>
       <div class="perf__row">
-        <div class="perf__label"><b>1024 × 1024</b><span>4 steps</span></div>
+        <div class="perf__label"><b>1024 × 1024</b><span>SD3 Medium · 4 steps</span></div>
         <div class="stack" style="--total:31.4">
           <i class="s-text" style="--v:0.7" title="Text encoders 0.7 s"></i><i class="s-mmdit" style="--v:25.2" title="MMDiT 25.2 s"></i><i class="s-vae" style="--v:5.4" title="VAE 5.4 s"></i>
         </div>
         <div class="perf__total mono">31 s</div>
       </div>
-      <div class="legend"><span><i class="s-text"></i>Text encoders</span><span><i class="s-mmdit"></i>MMDiT (4 steps)</span><span><i class="s-vae"></i>VAE decode</span></div>
+      <div class="perf__row">
+        <div class="perf__label"><b>1024 × 1024</b><span>FLUX.2 Klein · 4 steps</span></div>
+        <div class="stack" style="--total:76.9">
+          <i class="s-text" style="--v:2.3" title="Text encoder 2.3 s"></i><i class="s-mmdit" style="--v:69.9" title="Denoiser 69.9 s"></i><i class="s-vae" style="--v:4.7" title="VAE 4.7 s"></i>
+        </div>
+        <div class="perf__total mono">77 s</div>
+      </div>
+      <div class="legend"><span><i class="s-text"></i>Text encoders</span><span><i class="s-mmdit"></i>Denoiser (4 steps)</span><span><i class="s-vae"></i>VAE decode</span></div>
     </div>
 
     <div class="table-wrap reveal">
       <table>
-        <thead><tr><th>Model</th><th>Resolution</th><th>Text</th><th>MMDiT</th><th>VAE</th><th>Total</th><th>Peak app memory</th></tr></thead>
+        <thead><tr><th>Model</th><th>Resolution</th><th>Text</th><th>Denoiser</th><th>VAE</th><th>Total</th><th>Peak app memory</th></tr></thead>
         <tbody>
           <tr><td>SD3-M 2-step</td><td>512</td><td>—</td><td>—</td><td>—</td><td class="mono">~5.6 s</td><td class="mono">~86 MB</td></tr>
           <tr><td>SD3-M 4-step <span class="pill">+ ReSeed</span></td><td>512</td><td class="mono">0.7 s</td><td class="mono">8.2 s</td><td class="mono">0.4 s</td><td class="mono">~9.4 s</td><td class="mono">~58 MB</td></tr>
           <tr><td>SD3-M 4-step</td><td>1024</td><td class="mono">0.7 s</td><td class="mono">25.2 s</td><td class="mono">5.4 s</td><td class="mono">~31 s</td><td class="mono">~146 MB</td></tr>
+          <tr><td>FLUX.2 Klein 4-step</td><td>1024</td><td class="mono">2.3 s</td><td class="mono">69.9 s</td><td class="mono">4.7 s</td><td class="mono">~77 s</td><td class="mono">~185 MB</td></tr>
         </tbody>
       </table>
-      <p class="table-note">iOS 18.5, ANE-first. The first run after install also compiles the stages on device (about 45 s at 1024, once; cached afterwards).</p>
+      <p class="table-note">iOS 18.5, ANE-first. The first run after install also compiles the stages on device, once (about 45 s for SD3 Medium at 1024, about 3 minutes for FLUX.2 Klein); cached afterwards.</p>
     </div>
   </div>
 </section>
@@ -260,7 +301,7 @@
     <p class="kicker">Samples</p>
     <h2>Generated with Core ML on the Neural Engine.</h2>
     <div class="gallery">
-      <figure class="reveal gallery__main"><img src="assets/klein-showcase.webp" alt="Four cyberpunk images: a neon street in the rain, a portrait with a cybernetic eye, a neon motorcycle in a tunnel, and a giant mech in a night market" width="1600" height="1600" loading="lazy"><figcaption>FLUX.2 Klein (4B), 4 steps, 1024 × 1024. The denoiser runs as 27 INT8 Core ML stages on the Neural Engine — generated on a Mac while the iPhone integration is in progress.</figcaption></figure>
+      <figure class="reveal gallery__main"><img src="assets/klein-showcase.webp" alt="Four cyberpunk images: a neon street in the rain, a portrait with a cybernetic eye, a neon motorcycle in a tunnel, and a giant mech in a night market" width="1600" height="1600" loading="lazy"><figcaption>FLUX.2 Klein (4B), 4 steps, 1024 × 1024, from the INT8 Core ML stages on the Neural Engine. The same stages run in the iPhone app; these four were rendered on a Mac.</figcaption></figure>
       <div class="gallery__side">
         <a class="video reveal" href="https://www.youtube.com/shorts/m5wlOkeY5Bw" target="_blank" rel="noopener" aria-label="Watch the demo video on YouTube">
           <img src="https://img.youtube.com/vi/m5wlOkeY5Bw/maxresdefault.jpg" alt="" loading="lazy">
@@ -290,8 +331,8 @@ open MobileDiffuser.xcodeproj
       <ul class="req reveal">
         <li><b>Device</b><span>iPhone 15 Pro or newer recommended</span></li>
         <li><b>OS / tools</b><span>iOS 18.2+, Xcode 16.2+</span></li>
-        <li><b>Models</b><span>~2.9 GB per resource folder, downloaded in-app</span></li>
-        <li><b>Reproduce</b><span>Conversion, probe and validation tools in <code>tools/</code>; notes in <code>docs/ANE_1024.md</code>, <code>docs/RESEED.md</code></span></li>
+        <li><b>Models</b><span>~2.9 GB per SD3 Medium folder, 7.5 GB for FLUX.2 Klein, downloaded in-app</span></li>
+        <li><b>Reproduce</b><span>Conversion, probe and validation tools in <code>tools/</code>; notes in <code>docs/ANE_1024.md</code>, <code>docs/FLUX2_KLEIN.md</code>, <code>docs/RESEED.md</code></span></li>
       </ul>
     </div>
 
@@ -299,6 +340,7 @@ open MobileDiffuser.xcodeproj
       <a class="link reveal" href="https://github.com/TWWinde/MobileDiffuser/tree/MCL" target="_blank" rel="noopener"><span>Code</span><b>github.com/TWWinde/MobileDiffuser</b><i>↗</i></a>
       <a class="link reveal" href="https://huggingface.co/Wenwu2000/MobileDiffuser-SD3-medium" target="_blank" rel="noopener"><span>Core ML resources</span><b>Wenwu2000/MobileDiffuser-SD3-medium</b><i>↗</i></a>
       <a class="link reveal" href="https://github.com/TWWinde/MobileDiffuser/blob/MCL/docs/ANE_1024.md" target="_blank" rel="noopener"><span>Write-up</span><b>How 1024 px got onto the Neural Engine</b><i>↗</i></a>
+      <a class="link reveal" href="https://github.com/TWWinde/MobileDiffuser/blob/MCL/docs/FLUX2_KLEIN.md" target="_blank" rel="noopener"><span>Write-up</span><b>FLUX.2 Klein on the Neural Engine</b><i>↗</i></a>
       <a class="link reveal" href="https://twwinde.github.io/reseed-project-page/" target="_blank" rel="noopener"><span>Related</span><b>ReSeed project page</b><i>↗</i></a>
     </div>
   </div>
@@ -327,7 +369,7 @@ open MobileDiffuser.xcodeproj
 <footer class="footer">
   <div class="wrap footer__grid">
     <div class="brand"><img src="assets/icon.webp" alt="" width="24" height="24"><span>MobileDiffuser</span></div>
-    <p>Code under the MIT License. Model weights keep their upstream licenses (Stable Diffusion 3 Medium: Stability AI Community License). Built on Apple’s <a href="https://github.com/apple/ml-stable-diffusion" target="_blank" rel="noopener">ml-stable-diffusion</a>.</p>
+    <p>Code under the MIT License. Model weights keep their upstream licenses (Stable Diffusion 3 Medium: Stability AI Community License; FLUX.2 Klein 4B and Qwen3-4B: Apache-2.0). Built on Apple’s <a href="https://github.com/apple/ml-stable-diffusion" target="_blank" rel="noopener">ml-stable-diffusion</a>.</p>
     <p class="footer__meta">Numbers measured on iPhone 15 Pro, iOS 18.5.</p>
   </div>
 </footer>

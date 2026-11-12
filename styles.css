@@ -195,7 +195,7 @@ figcaption { margin-top: 12px; font-size: 13.5px; color: var(--dim); line-height
 .perf__label span { font-size: 13px; color: var(--dim); }
 .perf__total { text-align: right; font-size: 18px; font-weight: 600; }
 .stack { display: flex; height: 30px; width: 0; border-radius: 9px; overflow: hidden; transition: width 1.2s cubic-bezier(.2,.8,.2,1); }
-.is-in .stack { width: calc(var(--total) / 31.4 * 100%); }
+.is-in .stack { width: calc(var(--total) / 76.9 * 100%); }
 .stack i { flex: var(--v) 0 0; min-width: 3px; }
 .s-text { background: #8b7bff; }
 .s-mmdit { background: linear-gradient(90deg, #ffb057, #ff7a45); }
