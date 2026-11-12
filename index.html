@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles.css?v=20261112b">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -232,24 +232,24 @@
   <div class="wrap">
     <p class="kicker">Performance</p>
     <h2>Measured on an iPhone 15 Pro, <em>warm, end to end.</em></h2>
-    <div class="perf reveal">
+    <div class="perf reveal" style="--max:76.9">
       <div class="perf__row">
         <div class="perf__label"><b>512 × 512</b><span>SD3 Medium · 4 steps</span></div>
-        <div class="stack" style="--total:9.4">
+        <div class="stack" style="--total:9.4; max-width:12.2%">
           <i class="s-text" style="--v:0.7" title="Text encoders 0.7 s"></i><i class="s-mmdit" style="--v:8.2" title="MMDiT 8.2 s"></i><i class="s-vae" style="--v:0.4" title="VAE 0.4 s"></i>
         </div>
         <div class="perf__total mono">9.4 s</div>
       </div>
       <div class="perf__row">
         <div class="perf__label"><b>1024 × 1024</b><span>SD3 Medium · 4 steps</span></div>
-        <div class="stack" style="--total:31.4">
+        <div class="stack" style="--total:31.4; max-width:40.8%">
           <i class="s-text" style="--v:0.7" title="Text encoders 0.7 s"></i><i class="s-mmdit" style="--v:25.2" title="MMDiT 25.2 s"></i><i class="s-vae" style="--v:5.4" title="VAE 5.4 s"></i>
         </div>
         <div class="perf__total mono">31 s</div>
       </div>
       <div class="perf__row">
         <div class="perf__label"><b>1024 × 1024</b><span>FLUX.2 Klein · 4 steps</span></div>
-        <div class="stack" style="--total:76.9">
+        <div class="stack" style="--total:76.9; max-width:100.0%">
           <i class="s-text" style="--v:2.3" title="Text encoder 2.3 s"></i><i class="s-mmdit" style="--v:69.9" title="Denoiser 69.9 s"></i><i class="s-vae" style="--v:4.7" title="VAE 4.7 s"></i>
         </div>
         <div class="perf__total mono">77 s</div>
@@ -374,6 +374,6 @@ open MobileDiffuser.xcodeproj
   </div>
 </footer>
 
-<script src="app.js" defer></script>
+<script src="app.js?v=20261112b" defer></script>
 </body>
 </html>
