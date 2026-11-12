@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MobileDiffuser — Diffusion Models on the iPhone Neural Engine</title>
-<meta name="description" content="Open-source iOS app running FLUX.2 Klein and distilled SD3 Medium fully on device with Core ML on the Apple Neural Engine. FLUX.2 Klein 1024px in 77 s; SD3 Medium: 512px in 9.4 s, 1024px in 31 s on iPhone 15 Pro, with ReSeed seed diversity at no extra cost.">
+<meta name="description" content="Open-source iOS app running FLUX.2 Klein and distilled SD3 Medium fully on device with Core ML on the Apple Neural Engine. FLUX.2 Klein 1024px in 33 s with mixed-resolution sampling; SD3 Medium: 512px in 9.4 s, 1024px in 31 s on iPhone 15 Pro, with ReSeed seed diversity at no extra cost.">
 <meta property="og:title" content="MobileDiffuser — Diffusion Models on the iPhone Neural Engine">
 <meta property="og:description" content="1024px in 31 s, 512px in 9.4 s, ~146 MB peak app memory. Fully on device, free and open source, no sign-up.">
 <meta property="og:image" content="https://twwinde.github.io/mobilediffuser-project-page/assets/og.jpg">
@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=20261112b">
+<link rel="stylesheet" href="styles.css?v=20261112d">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -50,7 +50,7 @@
     <div class="hero__copy">
       <p class="eyebrow"><span class="dot"></span>Free · No sign-up · Open source · iOS · Core ML · Apple Neural Engine</p>
       <h1>Large diffusion models, <em>entirely on your iPhone.</em></h1>
-      <p class="lede">MobileDiffuser runs <strong>FLUX.2 Klein</strong> and a distilled <strong>SD3 Medium</strong> on the Neural Engine — text encoder, denoiser and VAE, no server, no GPU fallback. On an iPhone&nbsp;15&nbsp;Pro: SD3 Medium at 512&nbsp;px in <strong>9.4&nbsp;s</strong> and 1024&nbsp;px in <strong>31&nbsp;s</strong>, FLUX.2 Klein at 1024&nbsp;px in <strong>77&nbsp;s</strong>, in under 200&nbsp;MB of app memory.</p>
+      <p class="lede">MobileDiffuser runs <strong>FLUX.2 Klein</strong> and a distilled <strong>SD3 Medium</strong> on the Neural Engine — text encoder, denoiser and VAE, no server, no GPU fallback. On an iPhone&nbsp;15&nbsp;Pro: SD3 Medium at 512&nbsp;px in <strong>9.4&nbsp;s</strong> and 1024&nbsp;px in <strong>31&nbsp;s</strong>, FLUX.2 Klein at 1024&nbsp;px in <strong>33&nbsp;s</strong> with mixed-resolution sampling, in about 200&nbsp;MB of app memory.</p>
       <div class="cta">
         <a class="btn btn--primary" href="https://github.com/TWWinde/MobileDiffuser/tree/MCL" target="_blank" rel="noopener">View the code</a>
         <a class="btn btn--ghost" href="https://huggingface.co/Wenwu2000/MobileDiffuser-SD3-medium" target="_blank" rel="noopener">🤗 Core ML models</a>
@@ -80,8 +80,8 @@
   <div class="wrap stats__grid">
     <div class="stat reveal"><div class="stat__n"><span data-count="9.4" data-dec="1">9.4</span><small>s</small></div><p>SD3 Medium · 512 px<br>4 steps, warm, iPhone 15 Pro</p></div>
     <div class="stat reveal"><div class="stat__n"><span data-count="31" data-dec="0">31</span><small>s</small></div><p>SD3 Medium · 1024 px<br>4 steps, tiled VAE included</p></div>
-    <div class="stat reveal"><div class="stat__n"><span data-count="77" data-dec="0">77</span><small>s</small></div><p>FLUX.2 Klein · 1024 px<br>4 steps, Qwen3 text encoder included</p></div>
-    <div class="stat reveal"><div class="stat__n"><span data-count="185" data-dec="0">185</span><small>MB</small></div><p>app memory with FLUX.2 Klein<br>146 MB for SD3 Medium at 1024</p></div>
+    <div class="stat reveal"><div class="stat__n"><span data-count="33" data-dec="0">33</span><small>s</small></div><p>FLUX.2 Klein · 1024 px<br>mixed-resolution, 77 s at full resolution</p></div>
+    <div class="stat reveal"><div class="stat__n"><span data-count="185" data-dec="0">185</span><small>MB</small></div><p>app memory with FLUX.2 Klein<br>(full resolution; ~220 MB mixed)</p></div>
   </div>
 </section>
 
@@ -189,7 +189,37 @@
         <div class="bar bar--good"><span>Denoiser, 4 steps</span><div class="bar__track"><i style="--w:91%"></i></div><b class="mono">69.9 s</b></div>
         <div class="bar"><span>VAE, 3 × 3 tiles</span><div class="bar__track"><i style="--w:6%"></i></div><b class="mono">4.7 s</b></div>
       </div>
-      <p class="probe__note">About 77 s per image and ~185 MB of app memory. The first run also compiles the 37 stages on the phone (about 3 minutes, once). A 512 px variant is converted and verified on a Mac; it has not been timed on the phone yet.</p>
+      <p class="probe__note">About 77 s per image and ~185 MB of app memory at full resolution. The first run also compiles the 37 stages on the phone (about 3 minutes, once).</p>
+    </div>
+
+    <h3 class="subhead reveal">Mixed-resolution sampling: <em>compose at 512, finish at 1024.</em></h3>
+    <p class="section__lede">A 1024 step costs about 17.5 s on the phone; a 512 step about 2.7 s. The early steps only decide the composition, so the app runs them at 512, upsamples the clean-image estimate, adds noise back, and spends a single step at 1024 on detail. No retraining and no new model — both stage sets are the same weights.</p>
+
+    <div class="pipe reveal" role="img" aria-label="Mixed-resolution sampling: three steps at 512, upsample and re-noise, one step at 1024, VAE decode">
+      <div class="pipe__node pipe__node--wide"><span class="pipe__tag pipe__tag--hot">ANE · steps 1–3</span><b>512 px stages</b><small>1,024 image tokens · ~2.7 s per step</small></div>
+      <div class="pipe__arrow"></div>
+      <div class="pipe__node"><span class="pipe__tag">CPU</span><b>Upsample ×2, re-noise</b><small>bicubic in VAE latent space, σ = 0.77</small></div>
+      <div class="pipe__arrow"></div>
+      <div class="pipe__node pipe__node--wide"><span class="pipe__tag pipe__tag--hot">ANE · step 4</span><b>1024 px stages</b><small>4,096 image tokens · ~17.5 s</small></div>
+      <div class="pipe__arrow"></div>
+      <div class="pipe__node"><span class="pipe__tag">ANE</span><b>VAE decoder</b><small>3 × 3 tiles</small></div>
+    </div>
+
+    <div class="split">
+      <figure class="split__media reveal">
+        <img src="assets/klein-mixed.webp" alt="Three prompts generated at full 1024 resolution in the top row and with mixed-resolution sampling in the bottom row; both rows are sharp and the neon sign reads OPEN 24 HOURS in both" width="1536" height="1024" loading="lazy">
+        <figcaption>Top: all four steps at 1024. Bottom: three steps at 512, one at 1024. Different noise, so the compositions differ; sharpness and lettering hold. Rendered on a Mac with the same Core ML stages.</figcaption>
+      </figure>
+      <div class="split__text">
+        <div class="probe reveal">
+          <div class="probe__head"><h3>FLUX.2 Klein · 1024 px in the app</h3><span class="mono">iPhone 15 Pro · warm</span></div>
+          <div class="bars">
+            <div class="bar"><span>Full resolution, 4 steps</span><div class="bar__track"><i style="--w:100%"></i></div><b class="mono">77 s</b></div>
+            <div class="bar bar--good"><span>Mixed: 3 × 512 + 1 × 1024</span><div class="bar__track"><i style="--w:43%"></i></div><b class="mono">33 s</b></div>
+          </div>
+          <p class="probe__note">Text 1.7 s, denoising 26.5 s, VAE 4.7 s. Checked by eye on three prompts, not a benchmark; a seed does not reproduce the full-resolution image. The first mixed run compiles the 512 stages once.</p>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -254,6 +284,13 @@
         </div>
         <div class="perf__total mono">77 s</div>
       </div>
+      <div class="perf__row">
+        <div class="perf__label"><b>1024 × 1024</b><span>FLUX.2 Klein · mixed-resolution</span></div>
+        <div class="stack" style="--total:32.9; max-width:42.8%">
+          <i class="s-text" style="--v:1.7" title="Text encoder 1.7 s"></i><i class="s-mmdit" style="--v:26.5" title="Denoiser 26.5 s"></i><i class="s-vae" style="--v:4.7" title="VAE 4.7 s"></i>
+        </div>
+        <div class="perf__total mono">33 s</div>
+      </div>
       <div class="legend"><span><i class="s-text"></i>Text encoders</span><span><i class="s-mmdit"></i>Denoiser (4 steps)</span><span><i class="s-vae"></i>VAE decode</span></div>
     </div>
 
@@ -265,6 +302,7 @@
           <tr><td>SD3-M 4-step <span class="pill">+ ReSeed</span></td><td>512</td><td class="mono">0.7 s</td><td class="mono">8.2 s</td><td class="mono">0.4 s</td><td class="mono">~9.4 s</td><td class="mono">~58 MB</td></tr>
           <tr><td>SD3-M 4-step</td><td>1024</td><td class="mono">0.7 s</td><td class="mono">25.2 s</td><td class="mono">5.4 s</td><td class="mono">~31 s</td><td class="mono">~146 MB</td></tr>
           <tr><td>FLUX.2 Klein 4-step</td><td>1024</td><td class="mono">2.3 s</td><td class="mono">69.9 s</td><td class="mono">4.7 s</td><td class="mono">~77 s</td><td class="mono">~185 MB</td></tr>
+          <tr><td>FLUX.2 Klein <span class="pill">mixed 512 → 1024</span></td><td>1024</td><td class="mono">1.7 s</td><td class="mono">26.5 s</td><td class="mono">4.7 s</td><td class="mono">~33 s</td><td class="mono">~220 MB</td></tr>
         </tbody>
       </table>
       <p class="table-note">iOS 18.5, ANE-first. The first run after install also compiles the stages on device, once (about 45 s for SD3 Medium at 1024, about 3 minutes for FLUX.2 Klein); cached afterwards.</p>
