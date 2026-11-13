@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MobileDiffuser — Diffusion Models on the iPhone Neural Engine</title>
-<meta name="description" content="Open-source iOS app running FLUX.2 Klein and distilled SD3 Medium fully on device with Core ML on the Apple Neural Engine. FLUX.2 Klein 1024px in 33 s with mixed-resolution sampling; SD3 Medium: 512px in 9.4 s, 1024px in 31 s on iPhone 15 Pro, with ReSeed seed diversity for about 0.3% extra time.">
+<meta name="description" content="Open-source iOS app running FLUX.2 Klein and distilled SD3 Medium fully on device with Core ML on the Apple Neural Engine. FLUX.2 Klein 1024px in 33 s with mixed-resolution sampling; SD3 Medium: 512px in 9.4 s, 1024px in 31 s on iPhone 15 Pro, with ReSeed seed diversity for about 0.2% extra time.">
 <meta property="og:title" content="MobileDiffuser — Diffusion Models on the iPhone Neural Engine">
 <meta property="og:description" content="1024px in 31 s, 512px in 9.4 s, ~146 MB peak app memory. Fully on device, free and open source, no sign-up.">
 <meta property="og:image" content="https://twwinde.github.io/mobilediffuser-project-page/assets/og.jpg">
@@ -229,7 +229,7 @@
   <div class="wrap">
     <p class="kicker">ReSeed, on device</p>
     <h2>Few-step models forget how to be different. <em>A 72k-parameter bias reminds them.</em></h2>
-    <p class="section__lede">Distilled students map different noise seeds to nearly the same image. <a href="https://twwinde.github.io/reseed-project-page/" target="_blank" rel="noopener">ReSeed</a> adds a learned per-channel bias to every transformer block output during the <em>first</em> sampler step only. Because each block is already its own Core ML stage, the bias is added between stages in Swift — same weights, no reload, and about 0.3% extra time.</p>
+    <p class="section__lede">Distilled students map different noise seeds to nearly the same image. <a href="https://twwinde.github.io/reseed-project-page/" target="_blank" rel="noopener">ReSeed</a> adds a learned per-channel bias to every transformer block output during the <em>first</em> sampler step only. Because each block is already its own Core ML stage, the bias is added between stages in Swift — same weights, no reload, and about 0.2% extra time.</p>
 
     <div class="reseed reveal">
       <div class="reseed__bar reseed__bar--prompts">
@@ -260,7 +260,7 @@
     <div class="cards three">
       <article class="card reveal"><div class="card__icon">＋</div><h3>Between-stage bias</h3><p>Biases for blocks 0–22 are added to stage outputs at step 1; the last block’s bias is a small extra input of the final stage. Steps 2–4 are the unchanged student.</p></article>
       <article class="card reveal"><div class="card__icon">≡</div><h3>One set of weights</h3><p>α = 0 is the plain 4-step model; α = 0.5 / 1.0 / 1.5 scale the adapter. Switching never reloads the pipeline.</p></article>
-      <article class="card reveal"><div class="card__icon">✓</div><h3>Checked against PyTorch</h3><p>The Core ML chain reproduces the ReSeed effect — a 39% change of the first-step output — within the usual fp16 / INT8 error. The bias add costs 13 ms at 512 px and 46 ms at 1024 px on a Mac, first step only.</p></article>
+      <article class="card reveal"><div class="card__icon">✓</div><h3>Checked against PyTorch</h3><p>The Core ML chain reproduces the ReSeed effect — a 39% change of the first-step output — within the usual fp16 / INT8 error. On the iPhone the bias add takes 18 ms at 512 px and about 63 ms at 1024 px, first step only.</p></article>
     </div>
   </div>
 </section>
