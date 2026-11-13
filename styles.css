@@ -332,3 +332,5 @@ pre .c { color: var(--dim); }
 #klein .split .probe { margin-top: 0; }
 #klein .split .bar { grid-template-columns: 1fr auto; row-gap: 8px; }
 #klein .split .bar .bar__track { grid-column: 1 / -1; grid-row: 2; }
+
+.reseed__bar--prompts { margin-bottom: 12px; }

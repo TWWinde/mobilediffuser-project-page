@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=20261112d">
+<link rel="stylesheet" href="styles.css?v=20261113a">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -232,19 +232,27 @@
     <p class="section__lede">Distilled students map different noise seeds to nearly the same image. <a href="https://twwinde.github.io/reseed-project-page/" target="_blank" rel="noopener">ReSeed</a> adds a learned per-channel bias to every transformer block output during the <em>first</em> sampler step only. Because each block is already its own Core ML stage, the bias is added between stages in Swift — same weights, no reload, and about 0.3% extra time.</p>
 
     <div class="reseed reveal">
+      <div class="reseed__bar reseed__bar--prompts">
+        <div class="seg" role="tablist" aria-label="Prompt">
+          <button role="tab" aria-selected="true" data-prompt="0">Portrait</button>
+          <button role="tab" aria-selected="false" data-prompt="1">Dog</button>
+          <button role="tab" aria-selected="false" data-prompt="2">Cyclist</button>
+          <button role="tab" aria-selected="false" data-prompt="3">Café</button>
+        </div>
+      </div>
       <div class="reseed__bar">
         <div class="seg" role="tablist" aria-label="ReSeed strength">
           <button role="tab" aria-selected="true" data-alpha="0">ReSeed off</button>
           <button role="tab" aria-selected="false" data-alpha="10">α 1.0</button>
           <button role="tab" aria-selected="false" data-alpha="15">α 1.5</button>
         </div>
-        <p class="reseed__prompt">“A portrait photo of a young woman in a park, natural light” · seeds 1–4 · 512 px</p>
+        <p class="reseed__prompt" id="reseedPrompt">“A portrait photo of a young woman in a park, natural light” · seeds 1–4 · 512 px</p>
       </div>
       <div class="reseed__grid" id="reseedGrid">
-        <figure><img src="assets/reseed/a0_s1.webp" alt="Seed 1" width="512" height="512" loading="lazy"><figcaption class="mono">seed 1</figcaption></figure>
-        <figure><img src="assets/reseed/a0_s2.webp" alt="Seed 2" width="512" height="512" loading="lazy"><figcaption class="mono">seed 2</figcaption></figure>
-        <figure><img src="assets/reseed/a0_s3.webp" alt="Seed 3" width="512" height="512" loading="lazy"><figcaption class="mono">seed 3</figcaption></figure>
-        <figure><img src="assets/reseed/a0_s4.webp" alt="Seed 4" width="512" height="512" loading="lazy"><figcaption class="mono">seed 4</figcaption></figure>
+        <figure><img src="assets/reseed/p0_a0_s1.webp" alt="Seed 1" width="512" height="512" loading="lazy"><figcaption class="mono">seed 1</figcaption></figure>
+        <figure><img src="assets/reseed/p0_a0_s2.webp" alt="Seed 2" width="512" height="512" loading="lazy"><figcaption class="mono">seed 2</figcaption></figure>
+        <figure><img src="assets/reseed/p0_a0_s3.webp" alt="Seed 3" width="512" height="512" loading="lazy"><figcaption class="mono">seed 3</figcaption></figure>
+        <figure><img src="assets/reseed/p0_a0_s4.webp" alt="Seed 4" width="512" height="512" loading="lazy"><figcaption class="mono">seed 4</figcaption></figure>
       </div>
       <p class="reseed__caption" id="reseedCaption">Without ReSeed, four seeds give almost the same frontal portrait.</p>
     </div>
@@ -412,6 +420,6 @@ open MobileDiffuser.xcodeproj
   </div>
 </footer>
 
-<script src="app.js?v=20261112b" defer></script>
+<script src="app.js?v=20261113a" defer></script>
 </body>
 </html>

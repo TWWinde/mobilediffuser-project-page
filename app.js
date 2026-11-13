@@ -60,35 +60,55 @@
     counters.forEach((c) => io2.observe(c));
   }
 
-  // ReSeed strength switch
-  const captions = {
-    "0": "Without ReSeed, four seeds give almost the same frontal portrait.",
-    "10": "α = 1.0 — hair, appearance, expression and background now change with the seed.",
-    "15": "α = 1.5 — even the framing varies: full-body shots and wider scenes appear.",
+  // ReSeed demo: prompt + strength switches
+  const prompts = [
+    { text: "\u201cA portrait photo of a young woman in a park, natural light\u201d",
+      captions: {
+        "0": "Without ReSeed, four seeds give almost the same frontal portrait.",
+        "10": "\u03b1 = 1.0 \u2014 hair, appearance, expression and background now change with the seed.",
+        "15": "\u03b1 = 1.5 \u2014 even the framing varies: full-body shots and wider scenes appear.",
+      } },
+    { text: "\u201cA photo of a dog sitting in a garden\u201d" },
+    { text: "\u201cA man riding a bicycle on a city street\u201d" },
+    { text: "\u201cA cozy cafe interior with wooden tables\u201d" },
+  ];
+  const generic = {
+    "0": "Without ReSeed, the four seeds share nearly the same composition.",
+    "10": "\u03b1 = 1.0 \u2014 framing, background and details vary more from seed to seed.",
+    "15": "\u03b1 = 1.5 \u2014 stronger variation in layout and framing. The effect is largest on portraits.",
   };
   const grid = document.getElementById("reseedGrid");
   const caption = document.getElementById("reseedCaption");
-  const tabs = [...document.querySelectorAll(".seg [data-alpha]")];
-  ["10", "15"].forEach((a) => { for (let s = 1; s <= 4; s++) { new Image().src = `assets/reseed/a${a}_s${s}.webp`; } });
-  const select = (btn) => {
-    const a = btn.dataset.alpha;
-    tabs.forEach((t) => t.setAttribute("aria-selected", String(t === btn)));
+  const promptLabel = document.getElementById("reseedPrompt");
+  const alphaTabs = [...document.querySelectorAll(".seg [data-alpha]")];
+  const promptTabs = [...document.querySelectorAll(".seg [data-prompt]")];
+  const state = { prompt: 0, alpha: "0" };
+  const src = (p, a, s) => `assets/reseed/p${p}_a${a}_s${s}.webp`;
+  const preload = (p) => ["0", "10", "15"].forEach((a) => { for (let s = 1; s <= 4; s++) { new Image().src = src(p, a, s); } });
+  preload(0);
+  const render = () => {
+    if (!grid) return;
+    alphaTabs.forEach((t) => t.setAttribute("aria-selected", String(t.dataset.alpha === state.alpha)));
+    promptTabs.forEach((t) => t.setAttribute("aria-selected", String(Number(t.dataset.prompt) === state.prompt)));
     grid.classList.add("is-swapping");
     setTimeout(() => {
-      grid.querySelectorAll("img").forEach((img, i) => { img.src = `assets/reseed/a${a}_s${i + 1}.webp`; });
-      caption.textContent = captions[a];
+      grid.querySelectorAll("img").forEach((img, i) => { img.src = src(state.prompt, state.alpha, i + 1); });
+      const p = prompts[state.prompt];
+      caption.textContent = (p.captions || generic)[state.alpha];
+      promptLabel.textContent = `${p.text} \u00b7 seeds 1\u20134 \u00b7 512 px`;
       grid.classList.remove("is-swapping");
     }, reduce ? 0 : 220);
   };
-  tabs.forEach((btn, i) => {
-    btn.addEventListener("click", () => select(btn));
+  const wire = (tabs, apply) => tabs.forEach((btn, i) => {
+    btn.addEventListener("click", () => { apply(btn); render(); });
     btn.addEventListener("keydown", (e) => {
       if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
       const next = tabs[(i + (e.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length];
-      next.focus();
-      select(next);
+      next.focus(); apply(next); render();
     });
   });
+  wire(alphaTabs, (b) => { state.alpha = b.dataset.alpha; });
+  wire(promptTabs, (b) => { state.prompt = Number(b.dataset.prompt); preload(state.prompt); });
 
   // Copy buttons
   document.querySelectorAll(".copy").forEach((btn) => {
