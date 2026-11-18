@@ -50,11 +50,10 @@
     <div class="hero__copy">
       <p class="eyebrow"><span class="dot"></span>Free · No sign-up · Open source · iOS · Core ML · Apple Neural Engine</p>
       <h1>Large diffusion models, <em>entirely on your iPhone.</em></h1>
-      <p class="lede">MobileDiffuser runs <strong>FLUX.2 Klein</strong> and a distilled <strong>SD3 Medium</strong> on the Neural Engine — text encoder, denoiser and VAE, no server, no GPU fallback. On an iPhone&nbsp;15&nbsp;Pro: SD3 Medium at 512&nbsp;px in <strong>9.4&nbsp;s</strong> and 1024&nbsp;px in <strong>31&nbsp;s</strong>, FLUX.2 Klein at 1024&nbsp;px in <strong>22&nbsp;s</strong> with mixed-resolution sampling, in about 200&nbsp;MB of app memory.</p>
+      <p class="lede">MobileDiffuser runs <strong>FLUX.2 Klein</strong> and a distilled <strong>SD3 Medium</strong> on the Neural Engine — text encoder, denoiser and VAE, no server, no GPU fallback. On an iPhone&nbsp;15&nbsp;Pro: SD3 Medium at 512&nbsp;px in <strong>9.4&nbsp;s</strong> and 1024&nbsp;px in <strong>31&nbsp;s</strong>, FLUX.2 Klein at 1024&nbsp;px in <strong>22&nbsp;s</strong> with mixed-resolution sampling, in about 220&nbsp;MB of app memory.</p>
       <div class="cta">
         <a class="btn btn--primary" href="https://github.com/TWWinde/MobileDiffuser/tree/MCL" target="_blank" rel="noopener">View the code</a>
         <a class="btn btn--ghost" href="https://huggingface.co/Wenwu2000/MobileDiffuser-SD3-medium" target="_blank" rel="noopener">🤗 Core ML models</a>
-        <a class="btn btn--ghost" href="https://www.youtube.com/shorts/m5wlOkeY5Bw" target="_blank" rel="noopener">▶ Demo</a>
       </div>
       <p class="free"><strong>100% free.</strong> No account, no sign-up, no API key — the app and the model downloads are open to everyone, and your prompts never leave the phone.</p>
       <p class="authors">Wenwu Tang · Dong Wang · Olga Saukh</p>
@@ -169,7 +168,7 @@
     <h2>A 4B image model and its 4B language model. <em>All of it on the Neural Engine.</em></h2>
     <div class="split">
       <div class="split__text">
-        <p class="section__lede">FLUX.2 Klein reads prompts with Qwen3-4B, a language model as large as the denoiser itself. In MobileDiffuser the text encoder, the transformer and the VAE are 37 Core ML stages that run on the ANE one at a time — the app stays under 200&nbsp;MB.</p>
+        <p class="section__lede">FLUX.2 Klein reads prompts with Qwen3-4B, a language model as large as the denoiser itself. In MobileDiffuser the text encoder, the transformer and the VAE are 37 Core ML stages that run on the ANE one at a time — the app stays at about 230&nbsp;MB.</p>
         <ol class="fixes">
           <li class="reveal"><span class="mono">01</span><div><h3>Qwen3, cut to what Klein uses</h3><p>The prompt embedding is the hidden states after layers 9, 18 and 27, so only 27 of 36 layers are converted — nine INT8 stages at <b>23 ms each</b>, 256 tokens instead of 512.</p></div></li>
           <li class="reveal"><span class="mono">02</span><div><h3>A language model in half precision</h3><p>One token carries a 16,000-magnitude activation whose square overflows fp16. The norm divides by the largest value first, and the MLP is rescaled around its last layer; without that the ANE returns <code>inf</code>.</p></div></li>
@@ -229,7 +228,7 @@
   <div class="wrap">
     <p class="kicker">ReSeed, on device</p>
     <h2>Few-step models forget how to be different. <em>A 72k-parameter bias reminds them.</em></h2>
-    <p class="section__lede">Distilled students map different noise seeds to nearly the same image. <a href="https://twwinde.github.io/reseed-project-page/" target="_blank" rel="noopener">ReSeed</a> adds a learned per-channel bias to every transformer block output during the <em>first</em> sampler step only. Because each block is already its own Core ML stage, the bias is added between stages in Swift — same weights, no reload, and about 0.2% extra time.</p>
+    <p class="section__lede">Distilled students map different noise seeds to nearly the same image. <a href="https://twwinde.github.io/reseed-project-page/" target="_blank" rel="noopener">ReSeed</a> (<a href="https://arxiv.org/abs/2610.37110" target="_blank" rel="noopener">paper</a>) adds a learned per-channel bias to every transformer block output during the <em>first</em> sampler step only. Because each block is already its own Core ML stage, the bias is added between stages in Swift — same weights, no reload, and about 0.2% extra time.</p>
 
     <div class="reseed reveal">
       <div class="reseed__bar reseed__bar--prompts">
@@ -341,7 +340,7 @@
   </div>
 </section>
 
-<!-- ───────────── Gallery + demo ───────────── -->
+<!-- ───────────── Gallery ───────────── -->
 <section class="section section--alt" id="gallery">
   <div class="wrap">
     <p class="kicker">Samples</p>
@@ -349,12 +348,7 @@
     <div class="gallery">
       <figure class="reveal gallery__main"><img src="assets/klein-showcase.webp?v=20261118" alt="Four cyberpunk images: a DJ with an LED visor in a laser-lit club, a cyborg black cat on a rainy windowsill, an elevated train crossing a megacity at dusk, and a hooded hacker among holographic screens" width="1600" height="1600" loading="lazy"><figcaption>FLUX.2 Klein (4B), 4 steps, 1024 × 1024, from the INT8 Core ML stages on the Neural Engine. The same stages run in the iPhone app; these four were rendered on a Mac.</figcaption></figure>
       <div class="gallery__side">
-        <a class="video reveal" href="https://www.youtube.com/shorts/m5wlOkeY5Bw" target="_blank" rel="noopener" aria-label="Watch the demo video on YouTube">
-          <img src="https://img.youtube.com/vi/m5wlOkeY5Bw/maxresdefault.jpg" alt="" loading="lazy">
-          <span class="video__play">▶</span>
-          <span class="video__label">Watch the demo</span>
-        </a>
-        <figure class="reveal shot"><img src="assets/app-settings.webp" alt="Settings panel downloading Core ML resources inside the app" width="590" height="1280" loading="lazy"><figcaption>Models download inside the app from Hugging Face — no Python, no CLI.</figcaption></figure>
+        <figure class="reveal shot"><img src="assets/app-settings.webp?v=20261118" alt="Settings panel listing the Core ML resource sets for SD3 Medium and FLUX.2 Klein at 512 and 1024" width="590" height="1282" loading="lazy"><figcaption>Models download inside the app from Hugging Face — no Python, no CLI.</figcaption></figure>
       </div>
     </div>
   </div>
@@ -388,6 +382,7 @@ open MobileDiffuser.xcodeproj
       <a class="link reveal" href="https://github.com/TWWinde/MobileDiffuser/blob/MCL/docs/ANE_1024.md" target="_blank" rel="noopener"><span>Write-up</span><b>How 1024 px got onto the Neural Engine</b><i>↗</i></a>
       <a class="link reveal" href="https://github.com/TWWinde/MobileDiffuser/blob/MCL/docs/FLUX2_KLEIN.md" target="_blank" rel="noopener"><span>Write-up</span><b>FLUX.2 Klein on the Neural Engine</b><i>↗</i></a>
       <a class="link reveal" href="https://twwinde.github.io/reseed-project-page/" target="_blank" rel="noopener"><span>Related</span><b>ReSeed project page</b><i>↗</i></a>
+      <a class="link reveal" href="https://arxiv.org/abs/2610.37110" target="_blank" rel="noopener"><span>Paper</span><b>ReSeed: A First-Step Bias Restores Lost Diversity in Diffusion Model Distillation</b><i>↗</i></a>
     </div>
   </div>
 </section>
